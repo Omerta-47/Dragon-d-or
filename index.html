@@ -1,0 +1,953 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Dragon d'Or – Restaurant Chinois à Volonté · Paris</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet" />
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --noir:       #0A0A0A;
+    --noir-doux:  #111111;
+    --encre:      #1A1A1F;
+    --or:         #C9A84C;
+    --or-clair:   #E8C97A;
+    --or-pale:    #F5E6B8;
+    --rouge:      #8B1A1A;
+    --rouge-vif:  #C0392B;
+    --blanc:      #F8F4EE;
+    --gris:       #888580;
+    --gris-clair: #D4CFC8;
+  }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--noir);
+    color: var(--blanc);
+    font-weight: 300;
+    line-height: 1.7;
+    overflow-x: hidden;
+    cursor: none;
+  }
+
+  /* ══ CURSEUR CUSTOM ══ */
+  .cursor {
+    position: fixed; width: 10px; height: 10px;
+    background: var(--or); border-radius: 50%;
+    pointer-events: none; z-index: 99999;
+    transform: translate(-50%, -50%);
+    transition: transform 0.1s, width 0.3s, height 0.3s, background 0.3s;
+    mix-blend-mode: difference;
+  }
+  .cursor-ring {
+    position: fixed; width: 36px; height: 36px;
+    border: 1px solid rgba(201,168,76,0.5); border-radius: 50%;
+    pointer-events: none; z-index: 99998;
+    transform: translate(-50%, -50%);
+    transition: transform 0.18s ease, width 0.3s, height 0.3s, opacity 0.3s;
+  }
+  body:hover .cursor { opacity: 1; }
+
+  /* ══ NAV ══ */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 500;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 1.4rem 4rem;
+    background: transparent;
+    border-bottom: 1px solid transparent;
+    transition: background 0.5s, border-color 0.5s, backdrop-filter 0.5s;
+  }
+  nav.scrolled {
+    background: rgba(10,10,10,0.95);
+    border-bottom-color: rgba(201,168,76,0.15);
+    backdrop-filter: blur(12px);
+  }
+  .nav-logo {
+    display: flex; flex-direction: column; align-items: flex-start;
+    text-decoration: none;
+  }
+  .nav-logo-cn {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 1.1rem; color: var(--or); letter-spacing: 0.15em; line-height: 1;
+  }
+  .nav-logo-fr {
+    font-size: 0.65rem; letter-spacing: 0.3em; text-transform: uppercase;
+    color: rgba(248,244,238,0.45); margin-top: 0.2rem;
+  }
+  .nav-links { display: flex; gap: 2.5rem; list-style: none; align-items: center; }
+  .nav-links a {
+    text-decoration: none; color: rgba(248,244,238,0.6);
+    font-size: 0.75rem; letter-spacing: 0.2em; text-transform: uppercase; font-weight: 400;
+    transition: color 0.3s;
+    position: relative;
+  }
+  .nav-links a::after {
+    content: ''; position: absolute; bottom: -3px; left: 0; right: 0;
+    height: 1px; background: var(--or);
+    transform: scaleX(0); transform-origin: right;
+    transition: transform 0.3s ease;
+  }
+  .nav-links a:hover { color: var(--or-clair); }
+  .nav-links a:hover::after { transform: scaleX(1); transform-origin: left; }
+  .nav-resa {
+    background: var(--or) !important; color: var(--noir) !important;
+    padding: 0.5rem 1.4rem; font-weight: 500 !important;
+    letter-spacing: 0.15em !important;
+    transition: background 0.25s !important;
+  }
+  .nav-resa::after { display: none !important; }
+  .nav-resa:hover { background: var(--or-clair) !important; color: var(--noir) !important; }
+
+  /* ══ HERO ══ */
+  .hero {
+    position: relative; min-height: 100vh;
+    display: flex; flex-direction: column;
+    justify-content: center; align-items: center;
+    text-align: center; overflow: hidden;
+  }
+  .hero-bg {
+    position: absolute; inset: -15%;
+    background: url('https://images.unsplash.com/photo-1563245372-f21724e3856d?w=1800&q=85') center/cover no-repeat;
+    z-index: 0; will-change: transform;
+    filter: brightness(0.25) saturate(60%);
+  }
+  /* Grille décorative */
+  .hero-grid {
+    position: absolute; inset: 0; z-index: 1;
+    background-image:
+      linear-gradient(rgba(201,168,76,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(201,168,76,0.04) 1px, transparent 1px);
+    background-size: 80px 80px;
+  }
+  .hero-vignette {
+    position: absolute; inset: 0; z-index: 1;
+    background: radial-gradient(ellipse at center, transparent 30%, rgba(0,0,0,0.85) 100%);
+  }
+  /* Ligne verticale déco gauche */
+  .hero-line-left {
+    position: absolute; left: 3.5rem; top: 15%; bottom: 15%;
+    width: 1px; background: linear-gradient(to bottom, transparent, rgba(201,168,76,0.4), transparent);
+    z-index: 2;
+  }
+  .hero-line-right {
+    position: absolute; right: 3.5rem; top: 15%; bottom: 15%;
+    width: 1px; background: linear-gradient(to bottom, transparent, rgba(201,168,76,0.4), transparent);
+    z-index: 2;
+  }
+
+  .hero-content { position: relative; z-index: 3; padding: 2rem; }
+  .hero-cn {
+    font-family: 'Noto Serif SC', serif;
+    font-size: clamp(1.2rem, 3vw, 2rem);
+    color: var(--or); letter-spacing: 0.6em;
+    margin-bottom: 1.5rem;
+    opacity: 0; animation: fadeUp 0.9s 0.2s forwards;
+  }
+  .hero h1 {
+    font-family: 'DM Sans', sans-serif;
+    font-size: clamp(3.5rem, 10vw, 8rem);
+    font-weight: 300; color: var(--blanc);
+    line-height: 0.95; letter-spacing: -0.02em;
+    margin-bottom: 0.3rem;
+    opacity: 0; animation: fadeUp 1s 0.45s forwards;
+  }
+  .hero h1 strong {
+    font-weight: 300; color: var(--or);
+    font-style: italic; font-family: 'DM Sans', sans-serif;
+  }
+  .hero-tagline {
+    font-size: clamp(0.75rem, 1.5vw, 0.9rem);
+    letter-spacing: 0.4em; text-transform: uppercase;
+    color: rgba(248,244,238,0.45); margin: 1.8rem 0 3rem;
+    opacity: 0; animation: fadeUp 0.9s 0.75s forwards;
+  }
+  .hero-btns {
+    display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;
+    opacity: 0; animation: fadeUp 0.9s 1s forwards;
+  }
+  /* Stat flottante */
+  .hero-stats {
+    position: absolute; bottom: 4rem; left: 0; right: 0;
+    display: flex; justify-content: center; gap: 5rem; z-index: 3;
+    opacity: 0; animation: fadeUp 0.9s 1.3s forwards;
+  }
+  .hero-stat { text-align: center; }
+  .hero-stat strong {
+    display: block; font-family: 'Noto Serif SC', serif;
+    font-size: 2rem; color: var(--or); line-height: 1;
+  }
+  .hero-stat span {
+    font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase;
+    color: rgba(248,244,238,0.4); margin-top: 0.3rem; display: block;
+  }
+
+  @keyframes fadeUp { to { opacity: 1; transform: translateY(0); } }
+  .hero-cn, .hero h1, .hero-tagline, .hero-btns { transform: translateY(25px); }
+
+  /* ══ BOUTONS ══ */
+  .btn-or {
+    background: var(--or); color: var(--noir);
+    padding: 0.9rem 2.5rem; border: none;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.78rem; letter-spacing: 0.2em; text-transform: uppercase; font-weight: 500;
+    text-decoration: none; display: inline-block;
+    transition: background 0.25s, transform 0.15s;
+  }
+  .btn-or:hover { background: var(--or-clair); transform: translateY(-2px); }
+  .btn-ghost {
+    background: transparent; color: var(--blanc);
+    padding: 0.9rem 2.5rem;
+    border: 1px solid rgba(248,244,238,0.25);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.78rem; letter-spacing: 0.2em; text-transform: uppercase;
+    text-decoration: none; display: inline-block;
+    transition: border-color 0.25s, color 0.25s, transform 0.15s;
+  }
+  .btn-ghost:hover { border-color: var(--or); color: var(--or); transform: translateY(-2px); }
+
+  /* ══ REVEAL ══ */
+  .reveal { opacity:0; transform:translateY(40px); transition:opacity 0.8s ease,transform 0.8s ease; }
+  .reveal.visible { opacity:1; transform:translateY(0); }
+  .reveal-left { opacity:0; transform:translateX(-60px); transition:opacity 0.9s ease,transform 0.9s ease; }
+  .reveal-left.visible { opacity:1; transform:translateX(0); }
+  .reveal-right { opacity:0; transform:translateX(60px); transition:opacity 0.9s ease,transform 0.9s ease; }
+  .reveal-right.visible { opacity:1; transform:translateX(0); }
+  .d1{transition-delay:0.1s} .d2{transition-delay:0.2s} .d3{transition-delay:0.3s}
+  .d4{transition-delay:0.4s} .d5{transition-delay:0.5s} .d6{transition-delay:0.6s}
+
+  /* ══ LAYOUT ══ */
+  section { padding: 7rem 2rem; }
+  .container { max-width: 1140px; margin: 0 auto; }
+  .section-eyebrow {
+    font-size: 0.68rem; letter-spacing: 0.4em; text-transform: uppercase;
+    color: var(--or); margin-bottom: 1rem; display: block; font-weight: 400;
+  }
+  .section-title {
+    font-family: 'DM Sans', sans-serif;
+    font-size: clamp(2rem, 4.5vw, 3.5rem);
+    font-weight: 300; color: var(--blanc); line-height: 1.1;
+    letter-spacing: -0.01em; margin-bottom: 1.5rem;
+  }
+  .section-title em { font-style: italic; color: var(--or); }
+  .or-line { width: 40px; height: 1px; background: var(--or); margin: 1.5rem 0 2.5rem; }
+
+  /* ══ CONCEPT ══ */
+  #concept { background: var(--noir-doux); }
+  .concept-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6rem; align-items: center; }
+  .concept-img-wrap { position: relative; }
+  .concept-img {
+    width: 100%; aspect-ratio: 3/4; object-fit: cover;
+    filter: saturate(70%) brightness(0.85);
+    transition: filter 0.6s;
+  }
+  .concept-img:hover { filter: saturate(100%) brightness(1); }
+  /* Cadre doré */
+  .concept-img-frame {
+    position: absolute; inset: -12px;
+    border: 1px solid rgba(201,168,76,0.25);
+    pointer-events: none;
+  }
+  .concept-img-frame::before {
+    content: ''; position: absolute;
+    top: 12px; left: 12px; right: 12px; bottom: 12px;
+    border: 1px solid rgba(201,168,76,0.1);
+  }
+  /* Caractère chinois déco */
+  .concept-cn-deco {
+    position: absolute; bottom: -2rem; right: -2rem;
+    font-family: 'Noto Serif SC', serif;
+    font-size: 8rem; color: rgba(201,168,76,0.06);
+    line-height: 1; pointer-events: none; z-index: -1;
+    user-select: none;
+  }
+  .concept-text p { color: var(--gris); margin-bottom: 1.4rem; font-size: 1rem; line-height: 1.8; }
+  .concept-text p span { color: var(--or-pale); font-weight: 400; }
+  .concept-numbers { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-top: 3rem; }
+  .concept-num { border-left: 1px solid rgba(201,168,76,0.3); padding-left: 1.2rem; }
+  .concept-num strong {
+    display: block; font-family: 'DM Sans', sans-serif;
+    font-size: 2.5rem; font-weight: 300; color: var(--or); line-height: 1;
+  }
+  .concept-num span { font-size: 0.72rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--gris); margin-top: 0.3rem; display: block; }
+
+  /* ══ MENU ══ */
+  #menu { background: var(--noir); position: relative; overflow: hidden; }
+  /* Fond décoratif */
+  #menu::before {
+    content: '龍';
+    font-family: 'Noto Serif SC', serif;
+    position: absolute; right: -2rem; top: 50%; transform: translateY(-50%);
+    font-size: 30rem; color: rgba(201,168,76,0.025);
+    pointer-events: none; user-select: none; line-height: 1;
+  }
+  .menu-tabs { display: flex; gap: 0; margin-top: 3rem; border-bottom: 1px solid rgba(201,168,76,0.15); }
+  .menu-tab {
+    padding: 0.9rem 2rem; font-size: 0.75rem; letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--gris); background: none; border: none; cursor: none;
+    border-bottom: 2px solid transparent; margin-bottom: -1px;
+    transition: color 0.3s, border-color 0.3s; font-family: 'DM Sans', sans-serif;
+  }
+  .menu-tab.active { color: var(--or); border-bottom-color: var(--or); }
+  .menu-tab:hover { color: var(--or-clair); }
+  .menu-panels { margin-top: 3rem; }
+  .menu-panel { display: none; }
+  .menu-panel.active { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 0; }
+  .menu-item {
+    padding: 1.4rem 0; border-bottom: 1px solid rgba(255,255,255,0.05);
+    display: flex; justify-content: space-between; align-items: flex-start;
+    gap: 2rem; transition: background 0.2s; padding-left: 1rem; padding-right: 1rem;
+  }
+  .menu-item:hover { background: rgba(201,168,76,0.03); }
+  .menu-item-left { flex: 1; }
+  .menu-item-name { font-size: 0.95rem; color: var(--blanc); font-weight: 400; letter-spacing: 0.02em; }
+  .menu-item-cn { font-family: 'Noto Serif SC', serif; font-size: 0.75rem; color: var(--or); margin-top: 0.2rem; letter-spacing: 0.1em; }
+  .menu-item-desc { font-size: 0.8rem; color: var(--gris); margin-top: 0.3rem; line-height: 1.5; }
+  .menu-item-price { font-family: 'DM Sans', sans-serif; font-size: 0.85rem; color: var(--or); font-weight: 500; white-space: nowrap; margin-top: 0.2rem; }
+
+  /* ══ FORMULE ══ */
+  .formule-block {
+    margin-top: 4rem; padding: 3rem;
+    border: 1px solid rgba(201,168,76,0.2);
+    display: grid; grid-template-columns: 1fr auto; gap: 2rem; align-items: center;
+    position: relative; overflow: hidden;
+  }
+  .formule-block::before {
+    content: ''; position: absolute; top: 0; left: 0;
+    width: 3px; height: 100%; background: var(--or);
+  }
+  .formule-block h3 {
+    font-family: 'DM Sans', sans-serif; font-weight: 300;
+    font-size: 1.6rem; color: var(--blanc); margin-bottom: 0.8rem;
+  }
+  .formule-block h3 em { color: var(--or); font-style: italic; }
+  .formule-block p { color: var(--gris); font-size: 0.9rem; }
+  .formule-price {
+    text-align: center; flex-shrink: 0;
+  }
+  .formule-price strong {
+    display: block; font-family: 'DM Sans', sans-serif; font-weight: 300;
+    font-size: 3.5rem; color: var(--or); line-height: 1;
+  }
+  .formule-price span { font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gris); }
+
+  /* ══ PARALLAX BANNER ══ */
+  .parallax-banner {
+    position: relative; height: 450px; overflow: hidden;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .parallax-banner-bg {
+    position: absolute; inset: -20%;
+    background: url('https://images.unsplash.com/photo-1547592180-85f173990554?w=1800&q=80') center/cover no-repeat;
+    filter: brightness(0.2) saturate(50%);
+    will-change: transform;
+  }
+  .parallax-banner-content { position: relative; z-index: 2; text-align: center; padding: 2rem; }
+  .parallax-banner-content blockquote {
+    font-family: 'DM Sans', sans-serif; font-weight: 300;
+    font-size: clamp(1.3rem, 3vw, 2.2rem);
+    color: var(--blanc); max-width: 750px; line-height: 1.5;
+    font-style: italic;
+  }
+  .parallax-banner-content blockquote em { color: var(--or); font-style: normal; }
+  .parallax-banner-content cite {
+    display: block; margin-top: 1.5rem;
+    font-size: 0.7rem; letter-spacing: 0.3em; text-transform: uppercase;
+    color: var(--or); font-style: normal;
+  }
+  /* Lignes décoratives horizontales */
+  .banner-line {
+    position: absolute; top: 50%; z-index: 2;
+    width: 80px; height: 1px; background: rgba(201,168,76,0.4);
+  }
+  .banner-line-left { left: 8%; }
+  .banner-line-right { right: 8%; }
+
+  /* ══ GALERIE ══ */
+  #galerie { background: var(--noir-doux); }
+  .galerie-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    grid-template-rows: 280px 280px;
+    gap: 3px; margin-top: 3rem;
+  }
+  .gal-item { overflow: hidden; position: relative; }
+  .gal-item.tall { grid-row: span 2; }
+  .gal-item img {
+    width: 100%; height: 100%; object-fit: cover;
+    filter: saturate(60%) brightness(0.8);
+    transition: filter 0.6s ease, transform 0.7s ease;
+    display: block;
+  }
+  .gal-item:hover img { filter: saturate(100%) brightness(1); transform: scale(1.06); }
+  /* Overlay hover */
+  .gal-item::after {
+    content: ''; position: absolute; inset: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.4), transparent 50%);
+    opacity: 0; transition: opacity 0.4s;
+  }
+  .gal-item:hover::after { opacity: 1; }
+
+  /* ══ EXPÉRIENCE ══ */
+  #experience { background: var(--encre); }
+  .exp-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 1px; margin-top: 4rem; background: rgba(201,168,76,0.1); }
+  .exp-item { background: var(--encre); padding: 3rem 2.5rem; position: relative; overflow: hidden; }
+  .exp-item::before {
+    content: ''; position: absolute; bottom: 0; left: 0; right: 0;
+    height: 2px; background: var(--or);
+    transform: scaleX(0); transform-origin: left;
+    transition: transform 0.5s ease;
+  }
+  .exp-item:hover::before { transform: scaleX(1); }
+  .exp-num {
+    font-family: 'Noto Serif SC', serif; font-size: 3rem;
+    color: rgba(201,168,76,0.15); line-height: 1; margin-bottom: 1.5rem;
+    display: block;
+  }
+  .exp-item h4 { font-size: 1rem; color: var(--or-pale); font-weight: 400; letter-spacing: 0.08em; margin-bottom: 0.8rem; }
+  .exp-item p { font-size: 0.88rem; color: var(--gris); line-height: 1.7; }
+
+  /* ══ CONTACT ══ */
+  #contact { background: var(--noir); }
+  .contact-grid { display: grid; grid-template-columns: 1.2fr 1fr 1fr; gap: 5rem; margin-top: 4rem; }
+  .contact-block h4 {
+    font-size: 0.72rem; letter-spacing: 0.3em; text-transform: uppercase;
+    color: var(--or); margin-bottom: 1.5rem; font-weight: 400;
+  }
+  .contact-block p, .contact-block li {
+    color: var(--gris); font-size: 0.92rem; margin-bottom: 0.5rem; line-height: 1.7;
+  }
+  .contact-block ul { list-style: none; }
+  .contact-block li strong { color: var(--blanc); font-weight: 400; }
+  .contact-block a { color: var(--or); text-decoration: none; transition: color 0.2s; }
+  .contact-block a:hover { color: var(--or-clair); }
+  /* Map placeholder */
+  .map-placeholder {
+    grid-column: 1; grid-row: 1;
+    background: var(--encre);
+    border: 1px solid rgba(201,168,76,0.1);
+    display: flex; align-items: center; justify-content: center;
+    min-height: 220px; color: var(--gris); font-size: 0.8rem;
+    letter-spacing: 0.1em;
+  }
+
+  /* ══ RÉSERVATION ══ */
+  #reservation { background: var(--encre); text-align: center; }
+  .resa-inner { max-width: 680px; margin: 0 auto; }
+  .resa-inner p { color: var(--gris); margin-bottom: 2.5rem; font-size: 1rem; }
+  .tel-block {
+    display: inline-flex; flex-direction: column; align-items: center;
+    gap: 0.3rem; text-decoration: none; margin: 2rem 0;
+    transition: transform 0.2s;
+  }
+  .tel-block:hover { transform: scale(1.03); }
+  .tel-block span { font-size: 0.65rem; letter-spacing: 0.3em; text-transform: uppercase; color: var(--or); }
+  .tel-block strong {
+    font-family: 'DM Sans', sans-serif; font-size: clamp(2rem, 5vw, 3.5rem);
+    font-weight: 300; color: var(--blanc); letter-spacing: -0.01em;
+  }
+  .resa-or { display: flex; align-items: center; gap: 1.5rem; justify-content: center; margin: 1rem 0 2rem; }
+  .resa-or::before, .resa-or::after { content: ''; flex: 1; max-width: 80px; height: 1px; background: rgba(201,168,76,0.2); }
+  .resa-or span { font-size: 0.65rem; letter-spacing: 0.25em; text-transform: uppercase; color: var(--gris); }
+
+  /* ══ FOOTER ══ */
+  footer {
+    background: #050505; color: rgba(136,133,128,0.5);
+    padding: 2.5rem 2rem; text-align: center;
+    border-top: 1px solid rgba(201,168,76,0.08);
+    font-size: 0.75rem; letter-spacing: 0.08em;
+  }
+  footer .footer-logo {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 1.2rem; color: rgba(201,168,76,0.4);
+    letter-spacing: 0.3em; display: block; margin-bottom: 1rem;
+  }
+  footer span { color: rgba(201,168,76,0.6); }
+
+  /* ══ RESPONSIVE ══ */
+  @media(max-width: 768px) {
+    body { cursor: auto; }
+    .cursor, .cursor-ring { display: none; }
+    nav { padding: 1rem 1.5rem; }
+    .nav-links { display: none; }
+    .hero-stats { gap: 2rem; bottom: 2rem; }
+    .hero-line-left, .hero-line-right { display: none; }
+    .concept-grid { grid-template-columns: 1fr; gap: 3rem; }
+    .formule-block { grid-template-columns: 1fr; }
+    .galerie-grid { grid-template-columns: 1fr 1fr; grid-template-rows: 200px 200px 200px; }
+    .gal-item.tall { grid-row: span 1; }
+    .exp-grid { grid-template-columns: 1fr; }
+    .contact-grid { grid-template-columns: 1fr; gap: 3rem; }
+    .concept-numbers { grid-template-columns: 1fr 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Curseur custom -->
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- ══ NAV ══ -->
+<nav id="navbar">
+  <a href="#" class="nav-logo">
+    <span class="nav-logo-cn">龍金</span>
+    <span class="nav-logo-fr">Dragon d'Or · Paris</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#concept">Le concept</a></li>
+    <li><a href="#menu">Le menu</a></li>
+    <li><a href="#galerie">Galerie</a></li>
+    <li><a href="#contact">Contact</a></li>
+    <li><a href="#reservation" class="nav-resa">Réserver</a></li>
+  </ul>
+</nav>
+
+<!-- ══ HERO ══ -->
+<section class="hero">
+  <div class="hero-bg" id="heroBg"></div>
+  <div class="hero-grid"></div>
+  <div class="hero-vignette"></div>
+  <div class="hero-line-left"></div>
+  <div class="hero-line-right"></div>
+
+  <div class="hero-content">
+    <p class="hero-cn">龍 · 金 · 宴</p>
+    <h1>Dragon<br><strong>d'Or</strong></h1>
+    <p class="hero-tagline">Restaurant Chinois à Volonté · Paris · Depuis 2008</p>
+    <div class="hero-btns">
+      <a href="#reservation" class="btn-or">Réserver une table</a>
+      <a href="#menu" class="btn-ghost">Voir le menu</a>
+    </div>
+  </div>
+
+  <div class="hero-stats">
+    <div class="hero-stat">
+      <strong>80+</strong>
+      <span>Plats au choix</span>
+    </div>
+    <div class="hero-stat">
+      <strong>16</strong>
+      <span>Ans d'excellence</span>
+    </div>
+    <div class="hero-stat">
+      <strong>200</strong>
+      <span>Couverts</span>
+    </div>
+  </div>
+</section>
+
+<!-- ══ CONCEPT ══ -->
+<section id="concept">
+  <div class="container">
+    <div class="concept-grid">
+      <div class="concept-img-wrap reveal-left">
+        <div class="concept-img-frame"></div>
+        <img src="https://images.unsplash.com/photo-1563245372-f21724e3856d?w=900&q=80" alt="Intérieur Dragon d'Or" class="concept-img" />
+        <div class="concept-cn-deco">食</div>
+      </div>
+      <div class="concept-text">
+        <span class="section-eyebrow reveal">Notre philosophie</span>
+        <h2 class="section-title reveal d1">L'art du festin,<br><em>sans limites</em></h2>
+        <div class="or-line reveal d2"></div>
+        <p class="reveal d2">Le Dragon d'Or n'est pas un buffet ordinaire. C'est une <span>table d'hôte à la chinoise</span> — les plats arrivent à vous, chauds, frais, préparés à la minute. Dim sum vapeur, canard laqué, wok de crevettes, sushis fusion… plus de 80 créations issues des quatre grandes cuisines de Chine.</p>
+        <p class="reveal d3">Notre chef Wei Chen, formé entre Shanghai et Paris, a composé un menu où la <span>tradition millénaire dialogue</span> avec la précision française. Le résultat : une expérience gastronomique illimitée, servie dans un écrin contemporain.</p>
+        <div class="concept-numbers reveal d3">
+          <div class="concept-num">
+            <strong>80+</strong>
+            <span>plats servis à table</span>
+          </div>
+          <div class="concept-num">
+            <strong>4</strong>
+            <span>cuisines régionales</span>
+          </div>
+          <div class="concept-num">
+            <strong>2h</strong>
+            <span>pour savourer</span>
+          </div>
+          <div class="concept-num">
+            <strong>0</strong>
+            <span>compromis sur la qualité</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ MENU ══ -->
+<section id="menu">
+  <div class="container">
+    <span class="section-eyebrow reveal">La carte</span>
+    <h2 class="section-title reveal d1">Une sélection <em>infinie</em></h2>
+    <div class="or-line reveal d2"></div>
+
+    <div class="menu-tabs reveal d2">
+      <button class="menu-tab active" data-tab="entrees">Entrées & Dim Sum</button>
+      <button class="menu-tab" data-tab="plats">Plats chauds</button>
+      <button class="menu-tab" data-tab="sushi">Sushis & Makis</button>
+      <button class="menu-tab" data-tab="desserts">Desserts</button>
+    </div>
+
+    <div class="menu-panels reveal d3">
+      <!-- ENTRÉES -->
+      <div class="menu-panel active" id="panel-entrees">
+        <div class="menu-item">
+          <div class="menu-item-left">
+            <div class="menu-item-name">Raviolis vapeur aux crevettes</div>
+            <div class="menu-item-cn">蝦餃</div>
+            <div class="menu-item-desc">Har gow, pâte translucide, gingembre frais</div>
+          </div>
+        </div>
+        <div class="menu-item">
+          <div class="menu-item-left">
+            <div class="menu-item-name">Bao au porc laqué</div>
+            <div class="menu-item-cn">叉燒包</div>
+            <div class="menu-item-desc">Brioche vapeur, char siu, sauce hoisin</div>
+          </div>
+        </div>
+        <div class="menu-item">
+          <div class="menu-item-left">
+            <div class="menu-item-name">Rouleaux de printemps croustillants</div>
+            <div class="menu-item-cn">春卷</div>
+            <div class="menu-item-desc">Légumes croquants, sauce aigre-douce maison</div>
+          </div>
+        </div>
+        <div class="menu-item">
+          <div class="menu-item-left">
+            <div class="menu-item-name">Wontons à la soupe</div>
+            <div class="menu-item-cn">雲吞</div>
+            <div class="menu-item-desc">Bouillon de poulet clarifié, huile de sésame</div>
+          </div>
+        </div>
+        <div class="menu-item">
+          <div class="menu-item-left">
+            <div class="menu-item-name">Gyozas frits maison</div>
+            <div class="menu-item-cn">鍋貼</div>
+            <div class="menu-item-desc">Porc & chou, sauce ponzu au citron</div>
+          </div>
+        </div>
+        <div class="menu-item">
+          <div class="menu-item-left">
+            <div class="menu-item-name">Ailes de poulet à l'ail noir</div>
+            <div class="menu-item-cn">蒜香雞翅</div>
+            <div class="menu-item-desc">Ail fermenté, sauce soja sucrée, sésame</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PLATS -->
+      <div class="menu-panel" id="panel-plats">
+        <div class="menu-item">
+          <div class="menu-item-left">
+            <div class="menu-item-name">Canard laqué de Pékin</div>
+            <div class="menu-item-cn">北京烤鴨</div>
+            <div class="menu-item-desc">Crêpes mandarine, concombre, sauce hoisin</div>
+          </div>
+        </div>
+        <div class="menu-item">
+          <div class="menu-item-left">
+            <div class="menu-item-name">Bœuf sauté au wok & brocolis</div>
+            <div class="menu-item-cn">西蘭花炒牛肉</div>
+            <div class="menu-item-desc">Sauce aux huîtres, gingembre, riz jasmin</div>
+          </div>
+        </div>
+        <div class="menu-item">
+          <div class="menu-item-left">
+            <div class="menu-item-name">Crevettes royales flambées</div>
+            <div class="menu-item-cn">皇帝蝦</div>
+            <div class="menu-item-desc">Beurre d'ail, piment doux, vermicelles de riz</div>
+          </div>
+        </div>
+        <div class="menu-item">
+          <div class="menu-item-left">
+            <div class="menu-item-name">Porc au caramel Shanghaïen</div>
+            <div class="menu-item-cn">紅燒肉</div>
+            <div class="menu-item-desc">Hong shao rou, mijotage 4 heures, riz gluant</div>
+          </div>
+        </div>
+        <div class="menu-item">
+          <div class="menu-item-left">
+            <div class="menu-item-name">Tofu soyeux au piment du Sichuan</div>
+            <div class="menu-item-cn">麻婆豆腐</div>
+            <div class="menu-item-desc">Mapo tofu, huile de piment, haricots noirs</div>
+          </div>
+        </div>
+        <div class="menu-item">
+          <div class="menu-item-left">
+            <div class="menu-item-name">Riz cantonais aux trois délices</div>
+            <div class="menu-item-cn">揚州炒飯</div>
+            <div class="menu-item-desc">Crevettes, lardons, œuf, légumes sautés</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SUSHI -->
+      <div class="menu-panel" id="panel-sushi">
+        <div class="menu-item">
+          <div class="menu-item-left">
+            <div class="menu-item-name">Maki saumon avocat</div>
+            <div class="menu-item-cn">三文魚卷</div>
+            <div class="menu-item-desc">Riz vinaigré, sésame doré, wasabi maison</div>
+          </div>
+        </div>
+        <div class="menu-item">
+          <div class="menu-item-left">
+            <div class="menu-item-name">Nigiri thon rouge</div>
+            <div class="menu-item-cn">鮪魚握り</div>
+            <div class="menu-item-desc">Thon de qualité sashimi, shiso, soja</div>
+          </div>
+        </div>
+        <div class="menu-item">
+          <div class="menu-item-left">
+            <div class="menu-item-name">Dragon roll tempura crevette</div>
+            <div class="menu-item-cn">龍卷</div>
+            <div class="menu-item-desc">Avocat, sauce épicée, tobiko orange</div>
+          </div>
+        </div>
+        <div class="menu-item">
+          <div class="menu-item-left">
+            <div class="menu-item-name">California roll king crab</div>
+            <div class="menu-item-cn">加州卷</div>
+            <div class="menu-item-desc">Crabe, concombre, mayonnaise yuzu</div>
+          </div>
+        </div>
+        <div class="menu-item">
+          <div class="menu-item-left">
+            <div class="menu-item-name">Sashimi 5 pièces au choix</div>
+            <div class="menu-item-cn">刺身盛り</div>
+            <div class="menu-item-desc">Saumon, thon, daurade, crevette, poulpe</div>
+          </div>
+        </div>
+        <div class="menu-item">
+          <div class="menu-item-left">
+            <div class="menu-item-name">Temaki saumon fumé</div>
+            <div class="menu-item-cn">手巻き</div>
+            <div class="menu-item-desc">Cône d'algue, fromage frais, ciboulette</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- DESSERTS -->
+      <div class="menu-panel" id="panel-desserts">
+        <div class="menu-item">
+          <div class="menu-item-left">
+            <div class="menu-item-name">Perles de coco & mangue fraîche</div>
+            <div class="menu-item-cn">芒果椰奶西米露</div>
+            <div class="menu-item-desc">Tapioca, lait de coco, mangue Alphonso</div>
+          </div>
+        </div>
+        <div class="menu-item">
+          <div class="menu-item-left">
+            <div class="menu-item-name">Beignets de banane au miel</div>
+            <div class="menu-item-cn">蜜糖香蕉球</div>
+            <div class="menu-item-desc">Pâte croustillante, miel de litchi, sésame</div>
+          </div>
+        </div>
+        <div class="menu-item">
+          <div class="menu-item-left">
+            <div class="menu-item-name">Crème brûlée au thé matcha</div>
+            <div class="menu-item-cn">抹茶烤布蕾</div>
+            <div class="menu-item-desc">Thé Uji, caramel fin, biscuit amande</div>
+          </div>
+        </div>
+        <div class="menu-item">
+          <div class="menu-item-left">
+            <div class="menu-item-name">Fondant au chocolat noir & litchi</div>
+            <div class="menu-item-cn">荔枝巧克力</div>
+            <div class="menu-item-desc">Cœur coulant, sorbet litchi rose</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FORMULE -->
+    <div class="formule-block reveal d2">
+      <div>
+        <h3>Formule <em>À Volonté</em></h3>
+        <p>Tous les plats de la carte, servis directement à votre table, à volonté pendant 2h. Boissons non comprises. Enfants de moins de 12 ans : tarif réduit.</p>
+      </div>
+      <div class="formule-price">
+        <strong>28€</strong>
+        <span>par personne</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ PARALLAX BANNER ══ -->
+<div class="parallax-banner">
+  <div class="parallax-banner-bg" id="bannerBg"></div>
+  <div class="banner-line banner-line-left"></div>
+  <div class="banner-line banner-line-right"></div>
+  <div class="parallax-banner-content reveal">
+    <blockquote>« La cuisine chinoise est un voyage de <em>mille saveurs</em> — chaque plat raconte une province, une saison, une histoire. »</blockquote>
+    <cite>— Chef Wei Chen</cite>
+  </div>
+</div>
+
+<!-- ══ GALERIE ══ -->
+<section id="galerie">
+  <div class="container">
+    <span class="section-eyebrow reveal">Galerie</span>
+    <h2 class="section-title reveal d1">L'ambiance, <em>les plats</em></h2>
+    <div class="or-line reveal d2"></div>
+  </div>
+  <div class="galerie-grid" style="max-width:1600px;margin:3rem auto 0;padding:0 2rem;">
+    <div class="gal-item tall reveal-left">
+      <img src="https://images.unsplash.com/photo-1563245372-f21724e3856d?w=900&q=80" alt="Salle Dragon d'Or" />
+    </div>
+    <div class="gal-item reveal d1">
+      <img src="https://images.unsplash.com/photo-1547592180-85f173990554?w=700&q=80" alt="Dim sum" />
+    </div>
+    <div class="gal-item reveal d2">
+      <img src="https://images.unsplash.com/photo-1569050467447-ce54b3bbc37d?w=700&q=80" alt="Sushi" />
+    </div>
+    <div class="gal-item reveal d3">
+      <img src="https://images.unsplash.com/photo-1582878826629-29b7ad1cdc43?w=700&q=80" alt="Wok" />
+    </div>
+    <div class="gal-item reveal d4">
+      <img src="https://images.unsplash.com/photo-1607301406259-dfb186e15de8?w=700&q=80" alt="Canard laqué" />
+    </div>
+  </div>
+</section>
+
+<!-- ══ EXPÉRIENCE ══ -->
+<section id="experience">
+  <div class="container">
+    <span class="section-eyebrow reveal">Pourquoi nous choisir</span>
+    <h2 class="section-title reveal d1">Une <em>expérience</em> unique</h2>
+    <div class="or-line reveal d2"></div>
+    <div class="exp-grid">
+      <div class="exp-item reveal d1">
+        <span class="exp-num">壹</span>
+        <h4>Servi à table, pas en buffet</h4>
+        <p>Ici, les plats viennent à vous. Chauds, frais, à la minute. Pas de file, pas de plateau — juste le plaisir d'être servi.</p>
+      </div>
+      <div class="exp-item reveal d2">
+        <span class="exp-num">貳</span>
+        <h4>Cuisiniers formés en Chine</h4>
+        <p>Notre brigade de 12 cuisiniers vient des quatre coins de Chine. Chaque plat est authentique, chaque technique est héritée.</p>
+      </div>
+      <div class="exp-item reveal d3">
+        <span class="exp-num">叁</span>
+        <h4>Cadre contemporain & élégant</h4>
+        <p>200 couverts dans une salle épurée, lumière tamisée, musique feutrée. Un dîner au Dragon d'Or, c'est une soirée complète.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ CONTACT ══ -->
+<section id="contact">
+  <div class="container">
+    <span class="section-eyebrow reveal">Nous trouver</span>
+    <h2 class="section-title reveal d1">Horaires <em>&</em> Accès</h2>
+    <div class="or-line reveal d2"></div>
+    <div class="contact-grid">
+      <div class="contact-block reveal d1">
+        <h4>Horaires</h4>
+        <ul>
+          <li><strong>Lundi</strong> Fermé</li>
+          <li><strong>Mardi – Vendredi</strong> 11h30–14h30 / 18h30–22h30</li>
+          <li><strong>Samedi</strong> 11h30–15h / 18h–23h</li>
+          <li><strong>Dimanche</strong> 11h30–16h (brunch à volonté)</li>
+        </ul>
+      </div>
+      <div class="contact-block reveal d2">
+        <h4>Nous contacter</h4>
+        <p>📍 42 avenue de la République, 75011 Paris</p>
+        <p>📞 <a href="tel:0142001234">01 42 00 12 34</a></p>
+        <p>✉️ <a href="mailto:contact@dragon-dor.fr">contact@dragon-dor.fr</a></p>
+        <p style="margin-top:1rem; font-size:0.82rem; color:var(--gris)">Métro : République (L3, L5, L8, L9, L11)</p>
+      </div>
+      <div class="contact-block reveal d3">
+        <h4>Informations pratiques</h4>
+        <ul>
+          <li>Réservation fortement conseillée</li>
+          <li>Groupes jusqu'à 80 personnes</li>
+          <li>Privatisation possible le lundi</li>
+          <li>Menu enfant : <strong>14 € (- 12 ans)</strong></li>
+          <li>Carte des vins & cocktails asiatiques</li>
+          <li>Accès PMR complet</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ RÉSERVATION ══ -->
+<section id="reservation">
+  <div class="container">
+    <div class="resa-inner">
+      <span class="section-eyebrow reveal">Réservation</span>
+      <h2 class="section-title reveal d1">Réservez <em>votre table</em></h2>
+      <p class="reveal d2">Pour les groupes ou occasions spéciales, contactez-nous directement — nous nous adaptons à vos besoins.</p>
+      <a href="tel:0142001234" class="tel-block reveal d3">
+        <span>Appelez-nous</span>
+        <strong>01 42 00 12 34</strong>
+      </a>
+      <div class="resa-or reveal d4"><span>ou par e-mail</span></div>
+      <p class="reveal d4" style="font-size:0.85rem; color:var(--gris)">
+        <a href="mailto:contact@dragon-dor.fr" style="color:var(--or)">contact@dragon-dor.fr</a>
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ══ FOOTER ══ -->
+<footer>
+  <span class="footer-logo">龍金</span>
+  <p>© 2024 <span>Dragon d'Or</span> · 42 avenue de la République, 75011 Paris · Tous droits réservés</p>
+</footer>
+
+<script>
+  /* — Curseur custom — */
+  const cursor = document.getElementById('cursor');
+  const ring   = document.getElementById('cursorRing');
+  let mx = 0, my = 0, rx = 0, ry = 0;
+  document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; cursor.style.left = mx+'px'; cursor.style.top = my+'px'; });
+  (function animRing(){
+    rx += (mx - rx) * 0.12; ry += (my - ry) * 0.12;
+    ring.style.left = rx+'px'; ring.style.top = ry+'px';
+    requestAnimationFrame(animRing);
+  })();
+  document.querySelectorAll('a, button').forEach(el => {
+    el.addEventListener('mouseenter', () => { cursor.style.width='18px'; cursor.style.height='18px'; ring.style.width='52px'; ring.style.height='52px'; });
+    el.addEventListener('mouseleave', () => { cursor.style.width='10px'; cursor.style.height='10px'; ring.style.width='36px'; ring.style.height='36px'; });
+  });
+
+  /* — Nav scroll — */
+  const navbar = document.getElementById('navbar');
+  const heroBg  = document.getElementById('heroBg');
+  const bannerBg = document.getElementById('bannerBg');
+  window.addEventListener('scroll', () => {
+    const sy = window.scrollY;
+    navbar.classList.toggle('scrolled', sy > 60);
+    if (heroBg) heroBg.style.transform = `translateY(${sy * 0.32}px)`;
+    if (bannerBg) {
+      const rect = bannerBg.parentElement.getBoundingClientRect();
+      const offset = (window.innerHeight / 2 - rect.top - rect.height / 2) * 0.18;
+      bannerBg.style.transform = `translateY(${offset}px)`;
+    }
+  }, { passive: true });
+
+  /* — Reveal au scroll — */
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); }});
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.reveal, .reveal-left, .reveal-right').forEach(el => observer.observe(el));
+
+  /* — Onglets menu — */
+  const tabs = document.querySelectorAll('.menu-tab');
+  tabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      tabs.forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.menu-panel').forEach(p => p.classList.remove('active'));
+      tab.classList.add('active');
+      document.getElementById('panel-' + tab.dataset.tab).classList.add('active');
+    });
+  });
+</script>
+</body>
+</html>
